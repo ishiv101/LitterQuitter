@@ -1,0 +1,7 @@
+npx:
+npm: 
+
+React Navigation has different navigators. 
+1. Stack Navigation: each page sits on top of one another. Ex. Instagram: Feed, Post, Comments, Profile
+2. Bottom Tabs: swtiching between sections. Ex. Spotify: Home, Search, Library. We will use bottom tabs
+
