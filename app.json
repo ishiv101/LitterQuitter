@@ -7,7 +7,10 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "LitterQuitter uses your location to track litter cleanup routes on the map."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -20,6 +23,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermissionText": "Allow LitterQuitter to use your location to track cleanup routes."
+        }
+      ]
+    ]
   }
 }
