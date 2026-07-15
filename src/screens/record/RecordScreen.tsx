@@ -55,7 +55,7 @@ export default function RecordScreen({ navigation }: RecordScreenProps) {
         itemsCount={items}
         distance={0}
         distanceUnit="miles"
-        totalSeconds={minutes*60}
+        totalSeconds={seconds}
         location="Greenwood Park, north path"
         onCancel={() => setIsFinished(false)}
         onDone={() => {
