@@ -1,5 +1,6 @@
 import {View, Text} from 'react-native';
 import { Colors } from '../constants/colors';
+import TrackingMap from './TrackingMap';
 
 
 type MapCardProps = {
@@ -21,7 +22,9 @@ export default function MapCard(prop: MapCardProps) {
             alignItems: 'center',
             width: '80%',
         }}>
-            <View style={{ height: 250, backgroundColor: Colors.background, borderRadius: 8, marginBottom: 12, width: '100%' }} />
+            <View />
+            <TrackingMap
+            />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                 <View style={{ alignItems: 'center' }}>
                     <Text style={{ color: Colors.text, fontSize: 20, fontWeight: 'bold' }}>{prop.itemCount}</Text>
