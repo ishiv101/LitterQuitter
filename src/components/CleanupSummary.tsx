@@ -12,8 +12,10 @@ type CleanupSummaryProps = {
     location: string;
     onCancel: () => void;
     onDone: () => void;
+    onDiscard?: () => void;
     cancelLabel?: string;
     doneLabel?: string;
+    discardLabel?: string;
     children?: React.ReactNode;
 };
 
@@ -25,8 +27,10 @@ export default function CleanupSummary({
     location,
     onCancel,
     onDone,
+    onDiscard,
     cancelLabel = 'Cancel',
     doneLabel = 'Done',
+    discardLabel = 'Discard',
     children,
 }: CleanupSummaryProps) {
 
@@ -35,7 +39,7 @@ export default function CleanupSummary({
     const secs = Math.floor(totalSeconds % 60);
     const durationDisplay = hours > 0 ? `${hours}h ${mins}m ${secs}s` : `${mins}m ${secs}s`;
 
-    const pace = distance > 0 ? (mins / distance).toFixed(2) : '0';
+    const pace = distance > 0 ? ((totalSeconds / 60) / distance).toFixed(2) : '0';
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }}>
@@ -52,7 +56,7 @@ export default function CleanupSummary({
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginBottom: 12 }}>
                 <MiniStatCard value={itemsCount} unit="items" />
-                <MiniStatCard value={distance} unit={distanceUnit} />
+                <MiniStatCard value={distance.toFixed(2)} unit={distanceUnit} />
                 <MiniStatCard value={durationDisplay} unit="duration" />
             </View>
 
@@ -64,6 +68,11 @@ export default function CleanupSummary({
 
             <View style={{ width: '100%' }}>
                 <Button title={cancelLabel} onPress={onCancel} />
+                {onDiscard && (
+                    <View style={{ marginTop: 12 }}>
+                        <Button title={discardLabel} onPress={onDiscard} />
+                    </View>
+                )}
                 <View style={{ marginTop: 12 }}>
                     <Button title={doneLabel} onPress={onDone} />
                 </View>

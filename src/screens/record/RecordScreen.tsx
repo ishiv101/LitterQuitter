@@ -14,7 +14,9 @@ type RecordScreenProps = {
 };
 
 export default function RecordScreen({ navigation }: RecordScreenProps) {
+  const [hasStarted, setHasStarted] = useState(false);
   const [items, setItems] = useState(0);
+  const [distance, setDistance] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
@@ -24,19 +26,29 @@ export default function RecordScreen({ navigation }: RecordScreenProps) {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
-    if (isPaused || isLogging || isFinished) return;
+    if (!hasStarted || isPaused || isLogging || isFinished) return;
 
     const timer = setInterval(() => {
       setSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isPaused, isLogging, isFinished]);
+  }, [hasStarted, isPaused, isLogging, isFinished]);
 
   const hour = Math.floor(seconds / 3600);
   const minutes = Math.floor(seconds / 60) % 60;
   const displaySeconds = seconds % 60;
   const formattedTime = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${displaySeconds.toString().padStart(2, '0')}`;
+
+  function resetSession() {
+    setHasStarted(false);
+    setSeconds(0);
+    setItems(0);
+    setDistance(0);
+    setIsPaused(false);
+    setIsLogging(false);
+    setIsFinished(false);
+  }
 
   function handleAddPin() {
     setItems(items + count);
@@ -53,18 +65,33 @@ export default function RecordScreen({ navigation }: RecordScreenProps) {
     return (
       <CleanupSummary
         itemsCount={items}
-        distance={0}
+        distance={distance}
         distanceUnit="miles"
         totalSeconds={seconds}
         location="Greenwood Park, north path"
         onCancel={() => setIsFinished(false)}
+        onDiscard={resetSession}
         onDone={() => {
-          setIsFinished(false);
-          setSeconds(0);
-          setItems(0);
+          resetSession();
           navigation.navigate('Profile');
         }}
       />
+    );
+  }
+
+  if (!hasStarted) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ height: 300, width: '100%' }}>
+          <TrackingMap onDistanceUpdate={setDistance} />
+        </View>
+        <TouchableOpacity
+          onPress={() => setHasStarted(true)}
+          style={{ backgroundColor: Colors.primary, paddingVertical: 16, paddingHorizontal: 60, borderRadius: 30, marginTop: 30 }}
+        >
+          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>Start</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -73,14 +100,14 @@ export default function RecordScreen({ navigation }: RecordScreenProps) {
       <Text>Record Screen</Text>
 
       <View style={{ marginTop: 200, height: 300, width: '100%' }}>
-        <TrackingMap />
+        <TrackingMap onDistanceUpdate={setDistance} />
       </View>
 
       <Text>{formattedTime}</Text>
 
       <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', width: '80%' }}>
         <MiniStatCard value={items} unit="pieces" />
-        <MiniStatCard value={0} unit="miles" />
+        <MiniStatCard value={distance.toFixed(2)} unit="miles" />
       </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '80%', marginTop: 20 }}>
